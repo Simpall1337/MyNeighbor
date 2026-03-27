@@ -29,6 +29,8 @@ namespace MyNeighbor.Infrastructure.Persistence.Configurations
 
             builder.Navigation(b => b.Apartments)
                    .HasField("_apartments");
+
+            builder.Ignore(b => b.DomainEvents);
         }
     }
 }

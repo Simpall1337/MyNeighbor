@@ -25,6 +25,7 @@ namespace MyNeighbor.Application.Housing.Queries.GetBuildings
                     b.Address.City,
                     b.Address.Street,
                     b.Address.HouseNumber))
+                .AsNoTracking()
                 .ToListAsync(cancellationToken);
         }
     }

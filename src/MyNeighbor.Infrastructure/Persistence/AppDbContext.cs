@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyNeighbor.Application.Common.Interfaces;
+using MyNeighbor.Domain.Common;
 using MyNeighbor.Domain.Housing;
 
 namespace MyNeighbor.Infrastructure.Persistence
@@ -13,6 +14,8 @@ namespace MyNeighbor.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Ignore<List<IDomainEvent>>();
+
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
     }
