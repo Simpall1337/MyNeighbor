@@ -1,0 +1,6 @@
+@MyNeighbor.API_HostAddress = http://localhost:5211
+
+GET {{MyNeighbor.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
