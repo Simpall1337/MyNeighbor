@@ -10,6 +10,7 @@ namespace MyNeighbor.Application.Common.Interfaces
     public interface IApplicationDbContext
     {
         DbSet<Building> Buildings { get; }
+        DbSet<Apartment> Apartments { get; }
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

@@ -25,10 +25,12 @@ namespace MyNeighbor.Infrastructure.Persistence.Configurations
 
             builder.HasMany(b => b.Apartments)
                    .WithOne()
-                   .HasForeignKey(a => a.BuildingId);
+                   .HasForeignKey(a => a.BuildingId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.Navigation(b => b.Apartments)
-                   .HasField("_apartments");
+                   .HasField("_apartments")
+                   .UsePropertyAccessMode(PropertyAccessMode.Field);
 
             builder.Ignore(b => b.DomainEvents);
         }

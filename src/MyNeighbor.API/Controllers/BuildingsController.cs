@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyNeighbor.Application.Housing.Commands.AddApartment;
 using MyNeighbor.Application.Housing.Commands.CreateBuilding;
 using MyNeighbor.Application.Housing.Queries.GetBuildings;
+using MyNeighbor.API.Contracts.Housing;
 
 namespace MyNeighbor.API.Controllers
 {
@@ -29,6 +31,12 @@ namespace MyNeighbor.API.Controllers
         {
             var id = await _mediator.Send(command, cancellationToken);
             return CreatedAtAction(nameof(GetAll), new { id }, id); 
+        }
+        [HttpPost("{buildingId}/apartments")]
+        public async Task<IActionResult> AddApartment(Guid buildingId, [FromBody] AddApartmentRequest request, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new AddApartmentCommand(buildingId, request.Number, request.Floor), cancellationToken);
+            return NoContent();
         }
     }
 }
