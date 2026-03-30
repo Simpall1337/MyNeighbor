@@ -1,24 +1,37 @@
 ﻿using MediatR;
-using MyNeighbor.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using MyNeighbor.Application.Common;
+using MyNeighbor.Application.Common.Exceptions;
+using MyNeighbor.Application.Common.Interfaces;
 
 namespace MyNeighbor.Application.Housing.Commands.AddApartment
 {
-    public class AddApartmentHandler(IApplicationDbContext context) : IRequestHandler<AddApartmentCommand>
+    public class AddApartmentHandler(IApplicationDbContext context) : IRequestHandler<AddApartmentCommand, Result<Unit>>
     {
-        public async Task Handle(AddApartmentCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(AddApartmentCommand request, CancellationToken cancellationToken)
         {
             var building = await context.Buildings
                 .Include(b => b.Apartments)
-                .FirstOrDefaultAsync(b => b.Id == request.BuildingId, cancellationToken)
-                ?? throw new InvalidOperationException($"Building {request.BuildingId} not found");
+                .FirstOrDefaultAsync(b => b.Id == request.BuildingId, cancellationToken);
 
-            building.AddApartment(request.Number, request.Floor);
+            if (building == null)
+                return Result<Unit>.Failure($"Building {request.BuildingId} not found");
 
-            var newApartment = building.Apartments.Last();
-            context.Apartments.Add(newApartment);
+            try
+            {
+                building.AddApartment(request.Number, request.Floor);
 
-            await context.SaveChangesAsync(cancellationToken);
+                var newApartment = building.Apartments.Last();
+                context.Apartments.Add(newApartment);
+
+                await context.SaveChangesAsync(cancellationToken);
+
+                return Result<Unit>.Success(Unit.Value);
+            }
+            catch (Exception ex)
+            {
+                return Result<Unit>.Failure(ex.Message);
+            }
         }
     }
 }

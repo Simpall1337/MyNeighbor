@@ -25,6 +25,11 @@ public class Building : AggregateRoot
             Address = address
         };
     }
+    public void Update(string name, Address address)
+    {
+        Name = name;
+        Address = address;
+    }
 
     public void AddApartment(int number, int floor)
     {

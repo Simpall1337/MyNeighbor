@@ -7,18 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MyNeighbor.Application.Housing.Queries.GetBuildings
 {
-    public class GetBuildingsHandler : IRequestHandler<GetBuildingsQuery, List<BuildingDto>>
+    public class GetBuildingsHandler(IApplicationDbContext context) : IRequestHandler<GetBuildingsQuery, List<BuildingDto>>
     {
-        private readonly IApplicationDbContext _context;
-
-        public GetBuildingsHandler(IApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         public async Task<List<BuildingDto>> Handle(GetBuildingsQuery request, CancellationToken cancellationToken)
         {
-            return await _context.Buildings
+            return await context.Buildings
                 .Select(b => new BuildingDto(
                     b.Id,
                     b.Name,
